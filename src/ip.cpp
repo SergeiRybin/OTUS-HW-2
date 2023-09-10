@@ -23,7 +23,7 @@ IP makeIP(const std::string &s)
 
     parsedOctets.push_back(s.substr(lowindex));
 
-    if (parsedOctets.size() != octetsNum)
+    if (parsedOctets.size() != IP_LENGTH)
     {
         goto parseFail;
     }
@@ -34,7 +34,7 @@ IP makeIP(const std::string &s)
         {
             goto parseFail;
         }
-        ip.octets[i] = octet;
+        ip[i] = octet;
         i++;
     }
     return ip;
@@ -45,10 +45,10 @@ parseFail:
 std::string toString(const IP &ip)
 {
     std::ostringstream ostream;
-    for (size_t i = 0; i < octetsNum; i++)
+    for (size_t i = 0; i < IP_LENGTH; i++)
     {
-        ostream << std::to_string(ip.octets[i]);
-        if (i != octetsNum - 1)
+        ostream << std::to_string(ip[i]);
+        if (i != IP_LENGTH - 1)
         {
             ostream << ".";
         }
@@ -58,13 +58,13 @@ std::string toString(const IP &ip)
 
 bool operator>(const IP &lhs, const IP &rhs)
 {
-    for (size_t i = 0; i < octetsNum; i++)
+    for (size_t i = 0; i < IP_LENGTH; i++)
     {
-        if (lhs.octets[i] == rhs.octets[i])
+        if (lhs[i] == rhs[i])
         {
             continue;
         }
-        return lhs.octets[i] > rhs.octets[i];
+        return lhs[i] > rhs[i];
     }
 
     return true; //all octets are the same

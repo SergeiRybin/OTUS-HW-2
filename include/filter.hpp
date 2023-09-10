@@ -6,25 +6,12 @@
 
 std::string filtIPStr(std::string);
 
-template <typename T, typename... Args>
-static bool IPSelector(const IP &ip, size_t octet, T t, Args... args)
-{
-    if (octet < octetsNum)
-    {
-        return ip.octets[octet] == t && IPSelector(ip, ++octet, args...);
-    }
-    else
-    {
-        return true;
-    }
-}
-
 template <typename T>
-static bool IPSelector(const IP &ip, size_t octet, T t)
+bool IPSelector(const IP &ip, size_t octet, T t)
 {
-    if (octet < octetsNum)
+    if (octet < IP_LENGTH)
     {
-        return ip.octets[octet] == t;
+        return ip[octet] == t;
     }
     else
     {
@@ -33,24 +20,24 @@ static bool IPSelector(const IP &ip, size_t octet, T t)
 }
 
 template <typename T, typename... Args>
-static bool anyIPSelector(const IP &ip, T t, Args... args)
+bool IPSelector(const IP &ip, size_t octet, T t, Args... args)
 {
-    for (size_t i = 0; i < octetsNum; i++)
+    if (octet < IP_LENGTH)
     {
-        if (ip.octets[i] == t)
-        {
-            return true;
-        }
+        return ip[octet] == t && IPSelector(ip, ++octet, args...);
     }
-    return anyIPSelector(ip, args...);
+    else
+    {
+        return true;
+    }
 }
 
 template <typename T>
-static bool anyIPSelector(const IP &ip, T t)
+bool anyIPSelector(const IP &ip, T t)
 {
-    for (size_t i = 0; i < octetsNum; i++)
+    for (size_t i = 0; i < IP_LENGTH; i++)
     {
-        if (ip.octets[i] == t)
+        if (ip[i] == t)
         {
             return true;
         }
@@ -58,12 +45,25 @@ static bool anyIPSelector(const IP &ip, T t)
     return false;
 }
 
+template <typename T, typename... Args>
+bool anyIPSelector(const IP &ip, T t, Args... args)
+{
+    for (size_t i = 0; i < IP_LENGTH; i++)
+    {
+        if (ip[i] == t)
+        {
+            return true;
+        }
+    }
+    return anyIPSelector(ip, args...);
+}
+
 template <typename... Args>
 std::vector<IP> filter(const std::vector<IP> &vec, Args... args)
 {
     std::vector<IP> selected;
     std::copy_if(vec.cbegin(), vec.cend(), std::back_inserter(selected),
-                 [&](auto ip) { return IPSelector(ip, 0, args...); });
+                 [args...](auto ip) { return IPSelector(ip, 0, args...); });
     return selected;
 }
 
@@ -72,6 +72,6 @@ std::vector<IP> filterAny(const std::vector<IP> &vec, Args... args)
 {
     std::vector<IP> selected;
     std::copy_if(vec.cbegin(), vec.cend(), std::back_inserter(selected),
-                 [&](auto ip) { return anyIPSelector(ip, args...); });
+                 [args...](auto ip) { return anyIPSelector(ip, args...); });
     return selected;
 }

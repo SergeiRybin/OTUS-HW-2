@@ -1,14 +1,17 @@
 #pragma once
 #include <algorithm>
 #include <string>
-#include <vector>
+#include <array>
 
-const static uint8_t octetsNum = 4;
+#ifndef IP_VERSION
+#define IPv4
+#define IP_LENGTH 4
+#else
+#define IPv6
+#define IP_LENGTH 16
+#endif
 
-struct IP
-{
-    uint8_t octets[octetsNum];
-};
+using IP = std::array<uint8_t, IP_LENGTH>;
 
 IP makeIP(const std::string &s);
 

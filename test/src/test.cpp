@@ -13,10 +13,10 @@ BOOST_AUTO_TEST_CASE(IpInputFilter)
 BOOST_AUTO_TEST_CASE(IpParse)
 {
     IP ip = makeIP("0.12.34.56");
-    BOOST_TEST(0 == ip.octets[0]);
-    BOOST_TEST(12 == ip.octets[1]);
-    BOOST_TEST(34 == ip.octets[2]);
-    BOOST_TEST(56 == ip.octets[3]);
+    BOOST_TEST(0 == ip[0]);
+    BOOST_TEST(12 == ip[1]);
+    BOOST_TEST(34 == ip[2]);
+    BOOST_TEST(56 == ip[3]);
 }
 
 BOOST_AUTO_TEST_CASE(PrintIP)
@@ -37,10 +37,10 @@ BOOST_AUTO_TEST_CASE(FilterIP)
 
     auto selIPs = filter(ips, 13, 2);
     BOOST_TEST(selIPs.size() == 1);
-    BOOST_TEST(selIPs.at(0).octets[0] == 13);
-    BOOST_TEST(selIPs.at(0).octets[1] == 2);
-    BOOST_TEST(selIPs.at(0).octets[2] == 3);
-    BOOST_TEST(selIPs.at(0).octets[3] == 4);
+    BOOST_TEST(selIPs.at(0)[0] == 13);
+    BOOST_TEST(selIPs.at(0)[1] == 2);
+    BOOST_TEST(selIPs.at(0)[2] == 3);
+    BOOST_TEST(selIPs.at(0)[3] == 4);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
