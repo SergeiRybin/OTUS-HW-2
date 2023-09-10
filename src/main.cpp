@@ -2,7 +2,6 @@
 #include <filter.hpp>
 #include <iostream>
 #include <ip.hpp>
-#include <iterator>
 #include <vector>
 
 template <typename Container>
